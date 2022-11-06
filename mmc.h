@@ -24,20 +24,44 @@
 #define MMC_GO_IDLE_STATE         0   /* bc                          */
 #define MMC_GO_IDLE_STATE_ARG		0x0
 #define MMC_GO_PRE_IDLE_STATE_ARG	0xF0F0F0F0
+#define MMC_SEND_OP_COND	1			
+#define MMC_ALL_SEND_CID	2
+#define MMC_SET_RELATIVE_ADDR	3
+#define MMC_SET_DSR		4
+#define MMC_SLEEP_AWAKE	5
+
 #define MMC_SWITCH		6	/* ac	[31:0] See below	R1b */
+#define MMC_SELECT/DESELECT_CARD	7
 #define MMC_SEND_EXT_CSD	8	/* adtc				R1  */
+#define MMC_SEND_CSD	9
+#define MMC_SEND_CID	10
+#define MMC_READ_DAT_UNTIL_STOP	11
+#define MMC_STOP_TRANSMISSION	12
+
 #define MMC_SEND_STATUS		13	/* ac   [31:16] RCA        R1  */
 #define R1_SWITCH_ERROR   (1 << 7)  /* sx, c */
 #define MMC_SWITCH_MODE_WRITE_BYTE	0x03	/* Set target to value */
+#define MMC_BUSTEST_R	14
+#define MMC_GO_INACTIVE_STATE	15
+#define MMC_SET_BLOCKLEN	16
+#define MMC_READ_SINGLE_BLOCK	17
 #define MMC_READ_MULTIPLE_BLOCK  18   /* adtc [31:0] data addr   R1  */
+#define MMC_BUSTEST_W	19
+#define MMC_WRITE_DAT_UNTIL_STOP	20
+
 #define MMC_SET_BLOCK_COUNT      23   /* adtc [31:0] data addr   R1  */
 #define MMC_WRITE_BLOCK		24	/* adtc [31:0] data addr	R1  */
 #define MMC_WRITE_MULTIPLE_BLOCK 25   /* adtc                    R1  */
+#define MMC_PROGRAM_CID	26
+#define MMC_PROGRAM_CSD	27
 #define MMC_SET_WRITE_PROT	28    /* ac   [31:0] data addr   R1b */
 #define MMC_CLEAR_WRITE_PROT	29    /* ac   [31:0] data addr   R1b */
+#define MMC_SEND_WRITE_PROT	30
 #define MMC_SEND_WRITE_PROT_TYPE 31   /* ac   [31:0] data addr   R1  */
+
 #define MMC_ERASE_GROUP_START	35    /* ac   [31:0] data addr   R1  */
 #define MMC_ERASE_GROUP_END	36    /* ac   [31:0] data addr   R1  */
+
 #define MMC_ERASE		38    /* ac   [31] Secure request
 					      [30:16] set to 0
 					      [15] Force Garbage Collect request
@@ -45,6 +69,12 @@
 					      [1] Discard Enable
 					      [0] Identify Write Blocks for
 					      Erase (or TRIM Enable)  R1b */
+#define MMC_FAST_IO	39
+#define MMC_GO_IRQ_STATE	40
+
+#define MMC_LOCK_UNLOCK	42
+
+#define MMC_APP_CMD	55
 #define MMC_GEN_CMD		56   /* adtc  [31:1] stuff bits.
 					      [0]: RD/WR1 R1 */
 
