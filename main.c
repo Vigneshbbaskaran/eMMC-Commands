@@ -80,7 +80,7 @@ void testcase_pass(int number)
 {
     printf("Test Case Passes :CMD%d \n",number);
 }
-void testcase_pass(int number)
+void testcase_fail(int number)
 {
     printf("Test Case Failled...!! :CMD%d \n",number);
 }
@@ -107,7 +107,7 @@ int main(int nargs, char **argv)
 	}
     
     // CMD 0
-    ret = issue_cmd0(fd, ext_csd);
+    ret = issue_cmd0(fd);
 	if (ret) {
 		testcase_fail(MMC_GO_IDLE_STATE);
 	}
