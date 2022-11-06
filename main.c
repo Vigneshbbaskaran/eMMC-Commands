@@ -103,6 +103,10 @@ static int issue_cmd0(int fd)
 void testcase(int ret,int number)
 {	if(ret==0)
     	printf("Test Case Passes :CMD%d \n",number);
+	else if (ret==99)	
+    	printf("INVALID CMD!! :CMD%d \n",number);
+	else if (ret==101)	
+    	return;
 	else
     	printf("Test Case Failled...!! :CMD%d \n",number);
 }
@@ -110,7 +114,7 @@ void testcase(int ret,int number)
 int issue_cmd(int fd,int i)
 {	
 	__u8 ext_csd[512], ext_csd_rev, reg;
-	int ret;
+	int ret=99;
 	switch (i)
 	{
 	case 0:
@@ -234,6 +238,7 @@ int issue_cmd(int fd,int i)
 
 	default:
 		printf("CMD%d RESERVED\n",i);
+		return=101;
 		break;
 	}
 	return ret;
