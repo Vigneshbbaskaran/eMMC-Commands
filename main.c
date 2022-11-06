@@ -23,11 +23,11 @@ static inline void set_single_cmd(struct mmc_ioc_cmd *ioc, __u32 opcode,
 	ioc->flags = MMC_RSP_SPI_R1 | MMC_RSP_R1 | MMC_CMD_ADTC;
 }
 
-int switch(int fd)
+int switch_cmd(int fd)
 {
 	int ret = 0;
 	struct mmc_ioc_cmd idata;
-	__u8 value = ext_csd[EXT_CSD_PARTITIONS_ATTRIBUTE] | EXT_CSD_ENH_USR;
+	__u8 value = EXT_CSD_PARTITIONS_ATTRIBUTE | EXT_CSD_ENH_USR;
 	__u8 index = EXT_CSD_PARTITIONS_ATTRIBUTE;
 	memset(&idata, 0, sizeof(idata));
 	idata.write_flag = 1;
@@ -72,7 +72,7 @@ int send_status(int fd)
 {
 	int ret = 0;
 	struct mmc_ioc_cmd idata;
-	__u32  response;
+	__u32  *response;
 	memset(&idata, 0, sizeof(idata));
 	idata.opcode = MMC_SEND_STATUS;
 	idata.arg = (1 << 16);
@@ -110,7 +110,7 @@ void testcase(int ret,int number)
 int issue_cmd(int fd,int i)
 {	
 	__u8 ext_csd[512], ext_csd_rev, reg;
-	int ret, i;
+	int ret;
 	switch (i)
 	{
 	case 0:
@@ -233,7 +233,7 @@ int issue_cmd(int fd,int i)
 		break;
 
 	default:
-		Printf("CMD%d RESERVED\n",i);
+		printf("CMD%d RESERVED\n",i);
 		break;
 	}
 	return ret;

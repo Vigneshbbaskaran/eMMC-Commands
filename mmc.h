@@ -31,7 +31,7 @@
 #define MMC_SLEEP_AWAKE	5
 
 #define MMC_SWITCH		6	/* ac	[31:0] See below	R1b */
-#define MMC_SELECT/DESELECT_CARD	7
+#define MMC_SELECT_DESELECT_CARD	7
 #define MMC_SEND_EXT_CSD	8	/* adtc				R1  */
 #define MMC_SEND_CSD	9
 #define MMC_SEND_CID	10
