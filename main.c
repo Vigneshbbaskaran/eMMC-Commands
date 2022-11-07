@@ -43,15 +43,15 @@ int do_general_cmd_read(int dev_fd)
 
 static  int set_single_cmd(int fd, __u32 opcode, int write_flag, unsigned int blocks,unsigned int flags)
 {   char frame[512];
-	struct mmc_ioc_cmd *ioc;
+	struct mmc_ioc_cmd ioc;
 	int ret=0;
-	mmc_ioc_cmd_set_data((*ioc), &frame);
-	ioc->opcode = opcode;
-	ioc->write_flag = write_flag;
-	ioc->arg = 0x0;
-	ioc->blksz = 512;
-	ioc->blocks = blocks;
-	ioc->flags = flags;
+	mmc_ioc_cmd_set_data((ioc), &frame);
+	ioc.opcode = opcode;
+	ioc.write_flag = write_flag;
+	ioc.arg = 0x0;
+	ioc.blksz = 512;
+	ioc.blocks = blocks;
+	ioc.flags = flags;
 	ret = ioctl(fd, MMC_IOC_CMD, &ioc);
 	return ret;
 }
