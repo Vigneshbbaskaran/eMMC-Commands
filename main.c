@@ -12,8 +12,8 @@
 #include <linux/fs.h>
 #include "mmc.h"
 
-#define TEST
-#define CMD 56
+//#define TEST
+#define CMD 2
 
 int do_general_cmd_read(int dev_fd)
 {
@@ -162,6 +162,7 @@ int issue_cmd(int fd,int i)
 		break;
 	case 2:
 		/* code */
+		ret = set_single_cmd(fd, MMC_ALL_SEND_CID, 0, 1, MMC_RSP_R2|MMC_RSP_SPI_R2|MMC_CMD_BCR);
 		break;
 	case 3:
 		/* code */
