@@ -12,6 +12,9 @@
 #include <linux/fs.h> /* for BLKGETSIZE */
 #include "mmc.h"
 
+#define TEST
+#define CMD 56
+
 int do_general_cmd_read(int dev_fd)
 {
 	char *device;
@@ -35,13 +38,14 @@ int do_general_cmd_read(int dev_fd)
 		perror("ioctl");
 		return ret;
 	}
-
+/*
 	printf("Data:\n");
 	for (i = 0; i < 512; i++) {
 		printf("%2x ", buf[i]);
 		if ((i + 1) % 16 == 0)
 			printf("\n");
 	}
+*/
 	return ret;
 }
 
@@ -301,13 +305,17 @@ int main(int nargs, char **argv)
 		perror("open");
 		exit(1);
 	}
-
-   // for(i=1;i<=56;i++)
-  //  {
+#ifdef TEST
+    for(i=1;i<=56;i++)
+    {
 	// CMD 
-	i=56;
     ret = issue_cmd(fd,i);
 		testcase(ret,i);
-	//}
+	}
+#else
+	i=CMD;
+	ret = issue_cmd(fd,i);
+		testcase(ret,i);
+#endif
     close(fd);
 }
