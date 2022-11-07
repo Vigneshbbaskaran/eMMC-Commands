@@ -12,6 +12,39 @@
 #include <linux/fs.h> /* for BLKGETSIZE */
 #include "mmc.h"
 
+int do_general_cmd_read(int dev_fd)
+{
+	char *device;
+	char *endptr;
+	__u8 buf[512];
+	__u32 arg = 0x01;
+	int ret = -EINVAL, i;
+	struct mmc_ioc_cmd idata;
+
+	memset(&idata, 0, sizeof(idata));
+	idata.write_flag = 0;
+	idata.opcode = MMC_GEN_CMD;
+	idata.arg = arg;
+	idata.flags = MMC_RSP_SPI_R1 | MMC_RSP_R1 | MMC_CMD_ADTC;
+	idata.blksz = 512;
+	idata.blocks = 1;
+	mmc_ioc_cmd_set_data(idata, buf);
+
+	ret = ioctl(dev_fd, MMC_IOC_CMD, &idata);
+	if (ret) {
+		perror("ioctl");
+		return ret;
+	}
+
+	printf("Data:\n");
+	for (i = 0; i < 512; i++) {
+		printf("%2x ", buf[i]);
+		if ((i + 1) % 16 == 0)
+			printf("\n");
+	}
+	return ret;
+}
+
 static inline void set_single_cmd(struct mmc_ioc_cmd *ioc, __u32 opcode,
 				  int write_flag, unsigned int blocks)
 {
@@ -86,6 +119,7 @@ int send_status(int fd)
 
 	return ret;
 }
+
 static int issue_cmd0(int fd)
 {
 	struct mmc_ioc_cmd idata;
@@ -101,11 +135,12 @@ static int issue_cmd0(int fd)
 }
 
 void testcase(int ret,int number)
-{	if(ret==0)
+{	
+	if(ret==0)
     	printf("Test Case Passes :CMD%d \n",number);
 	else if (ret==99)	
     	printf("INVALID CMD!! :CMD%d \n",number);
-	else if (ret==101)	
+	else if (ret==101)	// skip reserved CMD
     	return;
 	else
     	printf("Test Case Failled...!! :CMD%d \n",number);
@@ -115,6 +150,7 @@ int issue_cmd(int fd,int i)
 {	
 	__u8 ext_csd[512], ext_csd_rev, reg;
 	int ret=99;
+	// INVALID COMMAND
 	switch (i)
 	{
 	case 0:
@@ -234,11 +270,13 @@ int issue_cmd(int fd,int i)
 		break;
 	case 56:
 		/* code */
+		ret = do_general_cmd_read(fd);
 		break;
 
 	default:
 		printf("CMD%d RESERVED\n",i);
-		return=101;
+		// For Reserved commands
+		return 101;
 		break;
 	}
 	return ret;
@@ -247,7 +285,6 @@ int issue_cmd(int fd,int i)
 
 int main(int nargs, char **argv)
 {
-	
 	__u32 regl, response;
 	int fd, ret, i=0;
 	char *device;
@@ -264,11 +301,13 @@ int main(int nargs, char **argv)
 		perror("open");
 		exit(1);
 	}
-    for(i=1;i<=56;i++)
-    {
-		// CMD 
+
+   // for(i=1;i<=56;i++)
+  //  {
+	// CMD 
+	i=56;
     ret = issue_cmd(fd,i);
 		testcase(ret,i);
-	}
+	//}
     close(fd);
 }
