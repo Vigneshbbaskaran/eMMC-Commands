@@ -9,7 +9,7 @@
 #include <errno.h>
 #include <stdint.h>
 #include <assert.h>
-#include <linux/fs.h> /* for BLKGETSIZE */
+#include <linux/fs.h>
 #include "mmc.h"
 
 #define TEST
@@ -38,26 +38,22 @@ int do_general_cmd_read(int dev_fd)
 		perror("ioctl");
 		return ret;
 	}
-/*
-	printf("Data:\n");
-	for (i = 0; i < 512; i++) {
-		printf("%2x ", buf[i]);
-		if ((i + 1) % 16 == 0)
-			printf("\n");
-	}
-*/
 	return ret;
 }
 
-static inline void set_single_cmd(struct mmc_ioc_cmd *ioc, __u32 opcode,
-				  int write_flag, unsigned int blocks)
-{
+static  int set_single_cmd(int fd, __u32 opcode, int write_flag, unsigned int blocks,unsigned int flags)
+{   char frame[512];
+	struct mmc_ioc_cmd *ioc;
+	int ret=0;
+	mmc_ioc_cmd_set_data((*ioc), &frame);
 	ioc->opcode = opcode;
 	ioc->write_flag = write_flag;
 	ioc->arg = 0x0;
 	ioc->blksz = 512;
 	ioc->blocks = blocks;
-	ioc->flags = MMC_RSP_SPI_R1 | MMC_RSP_R1 | MMC_CMD_ADTC;
+	ioc->flags = flags;
+	ret = ioctl(fd, MMC_IOC_CMD, &ioc);
+	return ret;
 }
 
 int switch_cmd(int fd)
@@ -127,13 +123,12 @@ int send_status(int fd)
 static int issue_cmd0(int fd)
 {
 	struct mmc_ioc_cmd idata;
-    __u32 arg;
+    __u32 arg=0;
     int ret;
 	memset(&idata, 0, sizeof(idata));
 	idata.opcode = MMC_GO_IDLE_STATE;
 	idata.arg = arg;
 	idata.flags = MMC_RSP_NONE | MMC_CMD_BC;
-
 	ret = ioctl(fd, MMC_IOC_CMD, &idata);
 	return ret;
 }
@@ -163,6 +158,7 @@ int issue_cmd(int fd,int i)
 		break;
 	case 1:
 		/* code */
+		ret = set_single_cmd(fd, MMC_SEND_OP_COND, 0, 1, MMC_RSP_R3|MMC_RSP_SPI_R3|MMC_CMD_BCR);
 		break;
 	case 2:
 		/* code */
@@ -305,12 +301,19 @@ int main(int nargs, char **argv)
 		perror("open");
 		exit(1);
 	}
+
 #ifdef TEST
-    for(i=1;i<=56;i++)
+    for(i=1;i<=56;i++)	//Testing all Commands
     {
 	// CMD 
-    ret = issue_cmd(fd,i);
-		testcase(ret,i);
+		if(i==0)
+		{
+			continue;
+		}
+		else{
+    		ret = issue_cmd(fd,i);
+				testcase(ret,i);
+		}
 	}
 #else
 	i=CMD;

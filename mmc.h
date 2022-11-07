@@ -278,3 +278,31 @@
 
 #define MMC_RSP_R1	(MMC_RSP_PRESENT|MMC_RSP_CRC|MMC_RSP_OPCODE)
 #define MMC_RSP_R1B	(MMC_RSP_PRESENT|MMC_RSP_CRC|MMC_RSP_OPCODE|MMC_RSP_BUSY)
+
+#define MMC_CMD_MASK    (3 << 5)                /* non-SPI command type */
+#define MMC_CMD_AC      (0 << 5)
+#define MMC_CMD_ADTC    (1 << 5)
+#define MMC_CMD_BC      (2 << 5)
+#define MMC_CMD_BCR     (3 << 5)
+
+#define MMC_RSP_SPI_S1  (1 << 7)                /* one status byte */
+#define MMC_RSP_SPI_S2  (1 << 8)                /* second byte */
+#define MMC_RSP_SPI_B4  (1 << 9)                /* four data bytes */
+#define MMC_RSP_SPI_BUSY (1 << 10)              /* card may send busy */
+
+#define MMC_RSP_R1      (MMC_RSP_PRESENT|MMC_RSP_CRC|MMC_RSP_OPCODE)
+#define MMC_RSP_R1B     (MMC_RSP_PRESENT|MMC_RSP_CRC|MMC_RSP_OPCODE|MMC_RSP_BUSY)
+#define MMC_RSP_R2      (MMC_RSP_PRESENT|MMC_RSP_136|MMC_RSP_CRC)
+#define MMC_RSP_R3      (MMC_RSP_PRESENT)
+#define MMC_RSP_R4      (MMC_RSP_PRESENT)
+#define MMC_RSP_R5      (MMC_RSP_PRESENT|MMC_RSP_CRC|MMC_RSP_OPCODE)
+#define MMC_RSP_R6      (MMC_RSP_PRESENT|MMC_RSP_CRC|MMC_RSP_OPCODE)
+#define MMC_RSP_R7      (MMC_RSP_PRESENT|MMC_RSP_CRC|MMC_RSP_OPCODE)
+
+#define MMC_RSP_SPI_R1  (MMC_RSP_SPI_S1)
+#define MMC_RSP_SPI_R1B (MMC_RSP_SPI_S1|MMC_RSP_SPI_BUSY)
+#define MMC_RSP_SPI_R2  (MMC_RSP_SPI_S1|MMC_RSP_SPI_S2)
+#define MMC_RSP_SPI_R3  (MMC_RSP_SPI_S1|MMC_RSP_SPI_B4)
+#define MMC_RSP_SPI_R4  (MMC_RSP_SPI_S1|MMC_RSP_SPI_B4)
+#define MMC_RSP_SPI_R5  (MMC_RSP_SPI_S1|MMC_RSP_SPI_S2)
+#define MMC_RSP_SPI_R7  (MMC_RSP_SPI_S1|MMC_RSP_SPI_B4)
