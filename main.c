@@ -42,7 +42,8 @@ int do_general_cmd_read(int dev_fd)
 }
 
 static  int set_single_cmd(int fd, __u32 opcode, int write_flag, unsigned int blocks,unsigned int flags)
-{   char frame[512];
+{   
+	char frame[512];
 	struct mmc_ioc_cmd ioc;
 	memset(&ioc, 0, sizeof(ioc));
 	int ret=0;
@@ -54,6 +55,8 @@ static  int set_single_cmd(int fd, __u32 opcode, int write_flag, unsigned int bl
 	ioc.blocks = blocks;
 	ioc.flags = flags;
 	ret = ioctl(fd, MMC_IOC_CMD, &ioc);
+	if (ret)
+		perror("ioctl");
 	return ret;
 }
 
@@ -288,6 +291,7 @@ int issue_cmd(int fd,int i)
 		break;
 	case 25:
 		/* code */
+		ret = set_single_cmd(fd, 25, 1, 1, 1);
 		break;
 	case 26:
 		/* code */
