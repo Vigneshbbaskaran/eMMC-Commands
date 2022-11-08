@@ -12,8 +12,8 @@
 #include <linux/fs.h>
 #include "mmc.h"
 
-#define TEST
-#define CMD 17
+//#define TEST
+#define CMD 30
 
 int do_general_cmd_read(int dev_fd)
 {
@@ -115,6 +115,7 @@ int cmd9(int fd)
 		perror("ioctl");
 	return ret;
 }
+
 int cmd16(int fd)
 {
 	int ret = 0;
@@ -130,6 +131,7 @@ int cmd16(int fd)
 		perror("ioctl");
 	return ret;
 }
+
 int cmd23(int fd)
 {
 	int ret = 0;
@@ -145,6 +147,7 @@ int cmd23(int fd)
 		perror("ioctl");
 	return ret;
 }
+
 int cmd24(int fd)
 {	
 	char frame[512];
@@ -163,6 +166,7 @@ int cmd24(int fd)
 		perror("ioctl");
 	return ret;
 }
+
 int switch_cmd(int fd)
 {
 	int ret = 0;
@@ -241,19 +245,26 @@ static int issue_cmd0(int fd)
 	ret = ioctl(fd, MMC_IOC_CMD, &idata);
 	return ret;
 }
-static int set_write_protect(int fd, __u32 blk_addr, int on_off)
+
+static int set_write_protect(int fd, __u32 blk_addr, int opcode)
 {
 	int ret = 0;
 	struct mmc_ioc_cmd idata;
 
 	memset(&idata, 0, sizeof(idata));
 	idata.write_flag = 1;
-	if (on_off==28)
+	if (opcode==28 || opcode==29)
+	{
+		idata.opcode =opcode;
 		idata.opcode = MMC_SET_WRITE_PROT;
-	else
-		idata.opcode = MMC_CLEAR_WRITE_PROT;
-	idata.arg = blk_addr;
-	idata.flags = MMC_RSP_SPI_R1B | MMC_RSP_R1B | MMC_CMD_AC;
+		idata.flags = MMC_RSP_SPI_R1B | MMC_RSP_R1B | MMC_CMD_AC;
+		idata.arg = blk_addr;
+	}
+	else{
+		idata.opcode = opcode;
+		idata.flags = MMC_RSP_SPI_R1 | MMC_RSP_R1 | MMC_CMD_ADTC;
+	}
+	
 
 	ret = ioctl(fd, MMC_IOC_CMD, &idata);
 	if (ret)
@@ -393,9 +404,11 @@ int issue_cmd(int fd,int i)
 		break;
 	case 30:
 		/* code */
+		ret = set_write_protect(fd,1,MMC_SEND_WRITE_PROT);
 		break;
 	case 31:
 		/* code */
+		ret = set_write_protect(fd,1,MMC_SEND_WRITE_PROT_TYPE);
 		break;
 	case 35:
 		/* code */
