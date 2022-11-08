@@ -97,8 +97,10 @@ int read_extcsd(int fd, __u8 *ext_csd)
 
 	ret = ioctl(fd, MMC_IOC_CMD, &idata);
 	if (ret)
+	{
 		perror("ioctl");
-
+		printf("ret:%d",ret);
+	}
 	return ret;
 }
 
