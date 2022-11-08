@@ -12,7 +12,7 @@
 #include <linux/fs.h>
 #include "mmc.h"
 
-//#define TEST
+#define TEST
 #define CMD 25
 
 int do_general_cmd_read(int dev_fd)
@@ -76,6 +76,15 @@ static  int set_single_cmd_wrt(int fd, __u32 opcode, int write_flag, unsigned in
 	ret = ioctl(fd, MMC_IOC_CMD, &ioc);
 	if (ret)
 		perror("ioctl");
+	else{
+		if(opcode==18)                                                                                                                                
+        {                                                                                                                                             
+        printf("read data:\n");                                                                         
+        	for(int i=0;i<512;i++)                                                                          
+                printf("%c",frame[i]);                                                                  
+        printf("\n");                                                                                       
+        }
+	}
 	return ret;
 }
 
@@ -208,6 +217,26 @@ static int issue_cmd0(int fd)
 	ret = ioctl(fd, MMC_IOC_CMD, &idata);
 	return ret;
 }
+static int set_write_protect(int fd, __u32 blk_addr, int on_off)
+{
+	int ret = 0;
+	struct mmc_ioc_cmd idata;
+
+	memset(&idata, 0, sizeof(idata));
+	idata.write_flag = 1;
+	if (on_off==28)
+		idata.opcode = MMC_SET_WRITE_PROT;
+	else
+		idata.opcode = MMC_CLEAR_WRITE_PROT;
+	idata.arg = blk_addr;
+	idata.flags = MMC_RSP_SPI_R1B | MMC_RSP_R1B | MMC_CMD_AC;
+
+	ret = ioctl(fd, MMC_IOC_CMD, &idata);
+	if (ret)
+		perror("ioctl");
+
+	return ret;
+}
 
 void testcase(int ret,int number)
 {	
@@ -293,6 +322,8 @@ int issue_cmd(int fd,int i)
 		break;
 	case 18:
 		/* code */
+		//Success
+		ret = set_single_cmd(fd, MMC_READ_MULTIPLE_BLOCK, 0, 1,1);
 		break;
 	case 19:
 		/* code */
@@ -308,24 +339,30 @@ int issue_cmd(int fd,int i)
 	case 24:
 		/* code */
 		//Success
-		ret = set_single_cmd_wrt(fd, 24, 1, 1, 1);
+		ret = set_single_cmd_wrt(fd, MMC_WRITE_BLOCK, 1, 1, 1);
 		break;
 	case 25:
 		/* code */
 		//Success
-		ret = set_single_cmd_wrt(fd, 25, 1, 1, 1);
+		ret = set_single_cmd_wrt(fd, MMC_WRITE_MULTIPLE_BLOCK, 1, 1, 1);
 		break;
 	case 26:
 		/* code */
+
+		// Dont Try NOW
 		break;
 	case 27:
 		/* code */
+
+		// Dont Try NOW
 		break;
 	case 28:
 		/* code */
+		ret = set_write_protect(fd,1,MMC_SET_WRITE_PROT);
 		break;
 	case 29:
 		/* code */
+		ret = set_write_protect(fd,1,MMC_CLEAR_WRITE_PROT);
 		break;
 	case 30:
 		/* code */
@@ -338,25 +375,32 @@ int issue_cmd(int fd,int i)
 		break;
 	case 36:
 		/* code */
+		
 		break;
 	case 38:
 		/* code */
+		
 		break;
 	case 39:
 		/* code */
+		
 		break;
 	case 40:
 		/* code */
+		
 		break;
 	case 42:
 		/* code */
+		
 		break;
 
 	case 55:
 		/* code */
+		
 		break;
 	case 56:
 		/* code */
+		//Success
 		ret = do_general_cmd_read(fd);
 		break;
 
@@ -390,7 +434,7 @@ int main(int nargs, char **argv)
 	}
 
 #ifdef TEST
-    for(i=1;i<=56;i++)	//Testing all Commands
+    for(i=28;i<=29;i++)	//Testing all Commands
     {
 	// CMD 
 		if(i==0)
