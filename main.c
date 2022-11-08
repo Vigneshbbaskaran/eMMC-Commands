@@ -13,7 +13,7 @@
 #include "mmc.h"
 
 //#define TEST
-#define CMD 9
+#define CMD 23
 
 int do_general_cmd_read(int dev_fd)
 {
@@ -62,7 +62,7 @@ int cmd9(int fd)
 	int ret = 0;
 	struct mmc_ioc_cmd idata;
 	memset(&idata, 0, sizeof(idata));
-	idata.write_flag = 1;
+	idata.write_flag = 0;
 	idata.opcode = MMC_SEND_CSD;
 	idata.arg = 0;
 	idata.flags = MMC_RSP_SPI_R1 | MMC_RSP_R1 | MMC_CMD_AC;
@@ -72,10 +72,23 @@ int cmd9(int fd)
 	ret = ioctl(fd, MMC_IOC_CMD, &idata);
 	if (ret)
 		perror("ioctl");
-
 	return ret;
 }
+int cmd23(int fd)
+{
+	int ret = 0;
+	struct mmc_ioc_cmd idata;
+	memset(&idata, 0, sizeof(idata));
+	idata.opcode = MMC_SET_BLOCK_COUNT;
+	idata.arg = 2;
+	idata.flags = MMC_RSP_SPI_R1 | MMC_RSP_R1 | MMC_CMD_AC;
+	/* Kernel will set cmd_timeout_ms if 0 is set */
 
+	ret = ioctl(fd, MMC_IOC_CMD, &idata);
+	if (ret)
+		perror("ioctl");
+	return ret;
+}
 
 int switch_cmd(int fd)
 {
@@ -176,7 +189,8 @@ int issue_cmd(int fd,int i)
 	switch (i)
 	{
 	case 0:
-		/* code */
+		/* code */ 
+		//SUCCESS
 		ret = issue_cmd0(fd);
 		break;
 	case 1:
@@ -204,6 +218,7 @@ int issue_cmd(int fd,int i)
 		break;
 	case 8:
 		/* code */
+		//SUCCESS
 		ret = read_extcsd(fd, ext_csd);
 		break;
 	case 9:
@@ -221,6 +236,7 @@ int issue_cmd(int fd,int i)
 		break;
 	case 13:
 		/* code */
+		//SUCCESS
 		ret = send_status(fd);
 		break;
 	case 14:
@@ -246,9 +262,11 @@ int issue_cmd(int fd,int i)
 		break;
 	case 23:
 		/* code */
+		ret = cmd23(fd);
 		break;
 	case 24:
 		/* code */
+		ret = set_single_cmd(fd, 24, 1, 1, MMC_RSP_R2|MMC_RSP_SPI_R2|MMC_CMD_BCR);
 		break;
 	case 25:
 		/* code */
