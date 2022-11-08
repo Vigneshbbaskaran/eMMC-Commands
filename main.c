@@ -13,7 +13,7 @@
 #include "mmc.h"
 
 //#define TEST
-#define CMD 23
+#define CMD 24
 
 int do_general_cmd_read(int dev_fd)
 {
@@ -89,7 +89,24 @@ int cmd23(int fd)
 		perror("ioctl");
 	return ret;
 }
+int cmd24(int fd)
+{	
+	char frame[512];
+	int ret = 0;
+	struct mmc_ioc_cmd idata;
 
+	mmc_ioc_cmd_set_data((ioc), &frame);
+	memset(&idata, 0, sizeof(idata));
+	idata.opcode = MMC_WRITE_BLOCK;
+	idata.arg = 1;
+	idata.flags = MMC_RSP_SPI_R1 | MMC_RSP_R1 | MMC_CMD_AC;
+	/* Kernel will set cmd_timeout_ms if 0 is set */
+
+	ret = ioctl(fd, MMC_IOC_CMD, &idata);
+	if (ret)
+		perror("ioctl");
+	return ret;
+}
 int switch_cmd(int fd)
 {
 	int ret = 0;
@@ -262,6 +279,7 @@ int issue_cmd(int fd,int i)
 		break;
 	case 23:
 		/* code */
+		//SUCCESS
 		ret = cmd23(fd);
 		break;
 	case 24:
