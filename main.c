@@ -13,7 +13,7 @@
 #include "mmc.h"
 
 //#define TEST
-#define CMD 24
+#define CMD 25
 
 int do_general_cmd_read(int dev_fd)
 {
@@ -53,12 +53,32 @@ static  int set_single_cmd(int fd, __u32 opcode, int write_flag, unsigned int bl
 	ioc.arg = 0x0;
 	ioc.blksz = 512;
 	ioc.blocks = blocks;
-	ioc.flags = flags;
+	ioc.flags = MMC_RSP_SPI_R1 | MMC_RSP_R1 | MMC_CMD_ADTC;
 	ret = ioctl(fd, MMC_IOC_CMD, &ioc);
 	if (ret)
 		perror("ioctl");
 	return ret;
 }
+
+static  int set_single_cmd_wrt(int fd, __u32 opcode, int write_flag, unsigned int blocks,unsigned int flags)
+{   
+	char frame[512]="qwerty..............................CMD-testing...........................................................";
+	struct mmc_ioc_cmd ioc;
+	memset(&ioc, 0, sizeof(ioc));
+	int ret=0;
+	mmc_ioc_cmd_set_data((ioc), &frame);
+	ioc.opcode = opcode;
+	ioc.write_flag = write_flag;
+	ioc.arg = 0x0;
+	ioc.blksz = 512;
+	ioc.blocks = blocks;
+	ioc.flags = MMC_RSP_SPI_R1 | MMC_RSP_R1 | MMC_CMD_ADTC;
+	ret = ioctl(fd, MMC_IOC_CMD, &ioc);
+	if (ret)
+		perror("ioctl");
+	return ret;
+}
+
 
 int cmd9(int fd)
 {
@@ -287,11 +307,13 @@ int issue_cmd(int fd,int i)
 		break;
 	case 24:
 		/* code */
-		ret = set_single_cmd(fd, 24, 1, 1, MMC_RSP_R2|MMC_RSP_SPI_R2|MMC_CMD_BCR);
+		//Success
+		ret = set_single_cmd_wrt(fd, 24, 1, 1, 1);
 		break;
 	case 25:
 		/* code */
-		ret = set_single_cmd(fd, 25, 1, 1, 1);
+		//Success
+		ret = set_single_cmd_wrt(fd, 25, 1, 1, 1);
 		break;
 	case 26:
 		/* code */
