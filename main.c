@@ -13,7 +13,7 @@
 #include "mmc.h"
 
 //#define TEST
-#define CMD 2
+#define CMD 9
 
 int do_general_cmd_read(int dev_fd)
 {
@@ -44,6 +44,7 @@ int do_general_cmd_read(int dev_fd)
 static  int set_single_cmd(int fd, __u32 opcode, int write_flag, unsigned int blocks,unsigned int flags)
 {   char frame[512];
 	struct mmc_ioc_cmd ioc;
+	memset(&ioc, 0, sizeof(ioc));
 	int ret=0;
 	mmc_ioc_cmd_set_data((ioc), &frame);
 	ioc.opcode = opcode;
@@ -185,6 +186,7 @@ int issue_cmd(int fd,int i)
 		break;
 	case 9:
 		/* code */
+		ret = set_single_cmd(fd, MMC_ALL_SEND_CID, 0, 1, MMC_RSP_R2|MMC_RSP_SPI_R2|MMC_CMD_AC);
 		break;
 	case 10:
 		/* code */
