@@ -95,7 +95,7 @@ int cmd24(int fd)
 	int ret = 0;
 	struct mmc_ioc_cmd idata;
 
-	mmc_ioc_cmd_set_data((ioc), &frame);
+	mmc_ioc_cmd_set_data((idata), &frame);
 	memset(&idata, 0, sizeof(idata));
 	idata.opcode = MMC_WRITE_BLOCK;
 	idata.arg = 1;
