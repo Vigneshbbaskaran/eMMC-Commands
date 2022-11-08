@@ -13,7 +13,7 @@
 #include "mmc.h"
 
 #define TEST
-#define CMD 25
+#define CMD 17
 
 int do_general_cmd_read(int dev_fd)
 {
@@ -57,6 +57,15 @@ static  int set_single_cmd(int fd, __u32 opcode, int write_flag, unsigned int bl
 	ret = ioctl(fd, MMC_IOC_CMD, &ioc);
 	if (ret)
 		perror("ioctl");
+	else{
+		if(opcode==18 || opcode==17)                                                                                                                                
+        {                                                                                                                                             
+        	printf("read data:\n");                                                                         
+        		for(int i=0;i<512;i++)                                                                          
+                	printf("%c",frame[i]);                                                                  
+        	printf("\n");                                                                                       
+        }
+	}
 	return ret;
 }
 
@@ -331,10 +340,12 @@ int issue_cmd(int fd,int i)
 		break;
 	case 16:
 		/* code */
+		//SUCCESS
 		ret = cmd16(fd);
 		break;
 	case 17:
 		/* code */
+		ret = set_single_cmd(fd, MMC_READ_SINGLE_BLOCK, 0, 1,1);
 		break;
 	case 18:
 		/* code */
