@@ -106,6 +106,21 @@ int cmd9(int fd)
 		perror("ioctl");
 	return ret;
 }
+int cmd16(int fd)
+{
+	int ret = 0;
+	struct mmc_ioc_cmd idata;
+	memset(&idata, 0, sizeof(idata));
+	idata.opcode = MMC_SET_BLOCKLEN;
+	idata.arg = 512;
+	idata.flags = MMC_RSP_SPI_R1 | MMC_RSP_R1 | MMC_CMD_AC;
+	/* Kernel will set cmd_timeout_ms if 0 is set */
+
+	ret = ioctl(fd, MMC_IOC_CMD, &idata);
+	if (ret)
+		perror("ioctl");
+	return ret;
+}
 int cmd23(int fd)
 {
 	int ret = 0;
@@ -316,6 +331,7 @@ int issue_cmd(int fd,int i)
 		break;
 	case 16:
 		/* code */
+		ret = cmd16(fd);
 		break;
 	case 17:
 		/* code */
@@ -357,10 +373,10 @@ int issue_cmd(int fd,int i)
 		// Dont Try NOW
 		break;
 	case 28:
-		/* code */
-		ret = set_write_protect(fd,1,MMC_SET_WRITE_PROT);
-		break;
 	case 29:
+		//SUCCESS
+		/* code */
+		ret = set_write_protect(fd,1,MMC_SET_WRITE_PROT);	
 		/* code */
 		ret = set_write_protect(fd,1,MMC_CLEAR_WRITE_PROT);
 		break;
@@ -375,7 +391,6 @@ int issue_cmd(int fd,int i)
 		break;
 	case 36:
 		/* code */
-		
 		break;
 	case 38:
 		/* code */
