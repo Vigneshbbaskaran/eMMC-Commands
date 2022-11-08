@@ -57,6 +57,26 @@ static  int set_single_cmd(int fd, __u32 opcode, int write_flag, unsigned int bl
 	return ret;
 }
 
+int cmd9(int fd)
+{
+	int ret = 0;
+	struct mmc_ioc_cmd idata;
+	memset(&idata, 0, sizeof(idata));
+	idata.write_flag = 1;
+	idata.opcode = MMC_SEND_CSD;
+	idata.arg = 0;
+	idata.flags = MMC_RSP_SPI_R1 | MMC_RSP_R1 | MMC_CMD_AC;
+	/* Kernel will set cmd_timeout_ms if 0 is set */
+	idata.cmd_timeout_ms = 0;
+
+	ret = ioctl(fd, MMC_IOC_CMD, &idata);
+	if (ret)
+		perror("ioctl");
+
+	return ret;
+}
+
+
 int switch_cmd(int fd)
 {
 	int ret = 0;
@@ -188,7 +208,7 @@ int issue_cmd(int fd,int i)
 		break;
 	case 9:
 		/* code */
-		ret = set_single_cmd(fd, MMC_ALL_SEND_CID, 0, 1, MMC_RSP_R2|MMC_RSP_SPI_R2|MMC_CMD_AC);
+		ret = cmd9(fd);
 		break;
 	case 10:
 		/* code */
