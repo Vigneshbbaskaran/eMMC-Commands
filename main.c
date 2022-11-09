@@ -13,7 +13,7 @@
 #include "mmc.h"
 
 //#define TEST
-#define CMD 20
+#define CMD 35
 
 int do_general_cmd_read(int dev_fd)
 {
@@ -371,6 +371,23 @@ static int cmd14(int fd)
 	return ret;
 }
 
+static int erase(int fd,int opcode,int arg)
+{
+	struct mmc_ioc_cmd idata;
+    __u32 arg=0;
+    int ret;
+	memset(&idata, 0, sizeof(idata));
+	idata.write_flag = 0;
+	idata.opcode = opcode;
+	idata.arg = 0;
+	if (opcode == 38)
+		idata.flags =MMC_RSP_R1B | MMC_RSP_SPI_R1B | MMC_CMD_AC;
+	else
+		idata.flags =MMC_RSP_SPI_R1 | MMC_RSP_R1 | MMC_CMD_AC;
+	ret = ioctl(fd, MMC_IOC_CMD, &idata);
+	return ret;
+}
+
 static int set_write_protect(int fd, __u32 blk_addr, int opcode)
 {
 	int ret = 0;
@@ -569,13 +586,15 @@ int issue_cmd(int fd,int i)
 		break;
 	case 35:
 		/* code */
+		ret = erase(fd,35,0);
 		break;
 	case 36:
 		/* code */
+		ret = erase(fd,36,1);
 		break;
 	case 38:
 		/* code */
-		
+		ret = erase(fd,38,0);
 		break;
 	case 39:
 		/* code */
