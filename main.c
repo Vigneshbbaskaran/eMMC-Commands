@@ -13,7 +13,7 @@
 #include "mmc.h"
 
 //#define TEST
-#define CMD 5
+#define CMD 55
 
 int do_general_cmd_read(int dev_fd)
 {
@@ -196,7 +196,6 @@ int sleep_cmd(int fd ,int arg)
 	int ret = 0;
 	struct mmc_ioc_cmd idata;
 	memset(&idata, 0, sizeof(idata));
-	idata.write_flag = 1;
 	idata.opcode = MMC_SLEEP_AWAKE;
 	idata.arg = arg;
 	idata.flags = MMC_RSP_SPI_R1B | MMC_RSP_R1B | MMC_CMD_AC;
@@ -261,6 +260,18 @@ static int issue_cmd0(int fd)
 	idata.opcode = MMC_GO_IDLE_STATE;
 	idata.arg = arg;
 	idata.flags = MMC_RSP_NONE | MMC_CMD_BC;
+	ret = ioctl(fd, MMC_IOC_CMD, &idata);
+	return ret;
+}
+static int cmd55(int fd)
+{
+	struct mmc_ioc_cmd idata;
+    __u32 arg=0;
+    int ret;
+	memset(&idata, 0, sizeof(idata));
+	idata.opcode = 55;
+	idata.arg = arg;
+	idata.flags =MMC_RSP_SPI_R1 | MMC_RSP_R1 | MMC_CMD_ADTC;
 	ret = ioctl(fd, MMC_IOC_CMD, &idata);
 	return ret;
 }
