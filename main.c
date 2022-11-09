@@ -13,7 +13,7 @@
 #include "mmc.h"
 
 //#define TEST
-#define CMD 11
+#define CMD 12
 
 int do_general_cmd_read(int dev_fd)
 {
@@ -122,6 +122,21 @@ int cmd16(int fd)
 	struct mmc_ioc_cmd idata;
 	memset(&idata, 0, sizeof(idata));
 	idata.opcode = MMC_SET_BLOCKLEN;
+	idata.arg = 512;
+	idata.flags = MMC_RSP_SPI_R1 | MMC_RSP_R1 | MMC_CMD_AC;
+	/* Kernel will set cmd_timeout_ms if 0 is set */
+
+	ret = ioctl(fd, MMC_IOC_CMD, &idata);
+	if (ret)
+		perror("ioctl");
+	return ret;
+}
+int cmd12(int fd)
+{
+	int ret = 0;
+	struct mmc_ioc_cmd idata;
+	memset(&idata, 0, sizeof(idata));
+	idata.opcode = 12;
 	idata.arg = 512;
 	idata.flags = MMC_RSP_SPI_R1 | MMC_RSP_R1 | MMC_CMD_AC;
 	/* Kernel will set cmd_timeout_ms if 0 is set */
@@ -442,6 +457,7 @@ int issue_cmd(int fd,int i)
 		break;
 	case 12:
 		/* code */
+		ret = cmd12(fd);
 		break;
 	case 13:
 		/* code */
