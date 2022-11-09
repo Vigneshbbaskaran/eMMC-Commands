@@ -282,6 +282,8 @@ static int cmd19(int fd)
 	struct mmc_ioc_cmd idata;
     __u32 arg=0;
     int ret;
+	char frame[512]="qwerty..............................CMD-testing...........................................................";
+	mmc_ioc_cmd_set_data((ioc), &frame);
 	memset(&idata, 0, sizeof(idata));
 	idata.write_flag = 1;
 	idata.opcode = MMC_BUSTEST_W;
