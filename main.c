@@ -13,7 +13,7 @@
 #include "mmc.h"
 
 //#define TEST
-#define CMD 12
+#define CMD 20
 
 int do_general_cmd_read(int dev_fd)
 {
@@ -522,6 +522,7 @@ int issue_cmd(int fd,int i)
 		break;
 	case 20:
 		/* code */
+		ret = set_single_cmd_wrt(fd, MMC_WRITE_DAT_UNTIL_STOP, 1, 1, 1);
 		break;
 	case 23:
 		/* code */
