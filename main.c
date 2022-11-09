@@ -492,7 +492,7 @@ int issue_cmd(int fd,int i)
 		break;
 	case 15:
 		/* code */
-		ret = cmd16(fd);
+		ret = cmd15(fd);
 		break;
 	case 16:
 		/* code */
