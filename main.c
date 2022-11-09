@@ -442,11 +442,11 @@ int issue_cmd(int fd,int i)
 		break;
 	case 19:
 		/* code */
-cmd_19:		ret = cmd19(fd);
+	ret = cmd19(fd);
 		if(ret==0)
 			{
 				printf("TEST BUS DATA SEND:\n");
-				goto cmd_14;
+				
 			}
 		else
 			break;
