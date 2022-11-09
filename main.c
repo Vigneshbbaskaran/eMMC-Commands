@@ -116,6 +116,21 @@ int cmd9(int fd)
 	return ret;
 }
 
+int cmd15(int fd)
+{
+	int ret = 0;
+	struct mmc_ioc_cmd idata;
+	memset(&idata, 0, sizeof(idata));
+	idata.opcode = 15;
+	idata.arg = 0;
+	idata.flags = MMC_RSP_SPI_R1 | MMC_RSP_R1 | MMC_CMD_AC;
+	/* Kernel will set cmd_timeout_ms if 0 is set */
+
+	ret = ioctl(fd, MMC_IOC_CMD, &idata);
+	if (ret)
+		perror("ioctl");
+	return ret;
+}
 int cmd16(int fd)
 {
 	int ret = 0;
@@ -477,6 +492,7 @@ int issue_cmd(int fd,int i)
 		break;
 	case 15:
 		/* code */
+		ret = cmd16(fd);
 		break;
 	case 16:
 		/* code */
