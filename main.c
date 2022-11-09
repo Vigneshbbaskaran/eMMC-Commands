@@ -374,7 +374,7 @@ static int cmd14(int fd)
 static int erase(int fd,int opcode,int arg)
 {
 	struct mmc_ioc_cmd idata;
-    __u32 arg=0;
+    
     int ret;
 	memset(&idata, 0, sizeof(idata));
 	idata.write_flag = 0;
