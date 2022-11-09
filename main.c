@@ -191,7 +191,7 @@ int switch_cmd(int fd)
 	return ret;
 }
 
-int sleep(int fd ,int arg)
+int sleep_cmd(int fd ,int arg)
 {
 	int ret = 0;
 	struct mmc_ioc_cmd idata;
@@ -331,12 +331,12 @@ int issue_cmd(int fd,int i)
 		break;
 	case 5:
 		/* code */
-		ret = sleep(fd,1<<15);
+		ret = sleep_cmd(fd,1<<15);
 		if(ret==0)
 			printf("Device goes to sleep Mode..");
 		else
 			break;
-		ret = sleep(fd,0);
+		ret = sleep_cmd(fd,0);
 		if(ret==0)
 			printf("Device Now Awaken..");
 		break;
