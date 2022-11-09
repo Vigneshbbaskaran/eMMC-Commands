@@ -270,7 +270,7 @@ static int cmd55(int fd)
     int ret;
 	memset(&idata, 0, sizeof(idata));
 	idata.opcode = 55;
-	idata.arg = arg;
+	idata.arg = (1 << 16);
 	idata.flags =MMC_RSP_SPI_R1 | MMC_RSP_R1 | MMC_CMD_ADTC;
 	ret = ioctl(fd, MMC_IOC_CMD, &idata);
 	return ret;
