@@ -273,6 +273,37 @@ static int cmd55(int fd)
 	idata.arg = (1 << 16);
 	idata.flags =MMC_RSP_SPI_R1 | MMC_RSP_R1 | MMC_CMD_ADTC;
 	ret = ioctl(fd, MMC_IOC_CMD, &idata);
+
+	return ret;
+}
+
+static int cmd19(int fd)
+{
+	struct mmc_ioc_cmd idata;
+    __u32 arg=0;
+    int ret;
+	memset(&idata, 0, sizeof(idata));
+	idata.write_flag = 1;
+	idata.opcode = MMC_BUSTEST_W;
+	idata.arg = 0;
+	idata.flags =MMC_RSP_SPI_R1 | MMC_RSP_R1 | MMC_CMD_ADTC;
+	ret = ioctl(fd, MMC_IOC_CMD, &idata);
+	
+	return ret;
+}
+
+static int cmd14(int fd)
+{
+	struct mmc_ioc_cmd idata;
+    __u32 arg=0;
+    int ret;
+	memset(&idata, 0, sizeof(idata));
+	idata.write_flag = 0;
+	idata.opcode = MMC_BUSTEST_R;
+	idata.arg = 0;
+	idata.flags =MMC_RSP_SPI_R1 | MMC_RSP_R1 | MMC_CMD_ADTC;
+	ret = ioctl(fd, MMC_IOC_CMD, &idata);
+	
 	return ret;
 }
 
@@ -382,6 +413,14 @@ int issue_cmd(int fd,int i)
 		break;
 	case 14:
 		/* code */
+		goto cmd_19;
+cmd_14:	ret = cmd14(fd);
+		if(ret==0)
+			{
+				printf("TEST BUS DATA RECIEVED:\n");
+			}
+		else
+			break;
 		break;
 	case 15:
 		/* code */
@@ -403,6 +442,14 @@ int issue_cmd(int fd,int i)
 		break;
 	case 19:
 		/* code */
+cmd_19:		ret = cmd19(fd);
+		if(ret==0)
+			{
+				printf("TEST BUS DATA SEND:\n");
+				goto cmd_14;
+			}
+		else
+			break;
 		break;
 	case 20:
 		/* code */
