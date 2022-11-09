@@ -475,7 +475,7 @@ int issue_cmd(int fd,int i)
 
 	case 55:
 		/* code */
-		
+		ret = cmd55(fd);
 		break;
 	case 56:
 		/* code */
