@@ -13,7 +13,7 @@
 #include "mmc.h"
 
 //#define TEST
-#define CMD 19
+#define CMD 14
 
 int do_general_cmd_read(int dev_fd)
 {
@@ -413,8 +413,8 @@ int issue_cmd(int fd,int i)
 		break;
 	case 14:
 		/* code */
-		goto cmd_19;
-cmd_14:	ret = cmd14(fd);
+	
+	ret = cmd14(fd);
 		if(ret==0)
 			{
 				printf("TEST BUS DATA RECIEVED:\n");
