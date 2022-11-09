@@ -586,14 +586,17 @@ int issue_cmd(int fd,int i)
 		break;
 	case 35:
 		/* code */
+		//SUCCESS
 		ret = erase(fd,35,0);
 		break;
 	case 36:
 		/* code */
+		//SUCCESS
 		ret = erase(fd,36,1);
 		break;
 	case 38:
 		/* code */
+		//SUCCESS
 		ret = erase(fd,38,0);
 		break;
 	case 39:
