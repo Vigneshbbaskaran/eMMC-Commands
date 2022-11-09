@@ -13,7 +13,7 @@
 #include "mmc.h"
 
 //#define TEST
-#define CMD 3
+#define CMD 7
 
 int do_general_cmd_read(int dev_fd)
 {
@@ -245,6 +245,24 @@ int read_extcsd(int fd, __u8 *ext_csd)
 	}
 	return ret;
 }
+int cmd7(int fd)
+{
+	int ret = 0;
+	struct mmc_ioc_cmd idata;
+	memset(&idata, 0, sizeof(idata));
+	idata.opcode = 7;
+	idata.arg = 0;
+	idata.flags = MMC_RSP_SPI_R1 | MMC_RSP_R1 | MMC_CMD_AC;
+	idata.blksz = 512;
+	idata.blocks = 1;
+	ret = ioctl(fd, MMC_IOC_CMD, &idata);
+	if (ret)
+	{
+		perror("ioctl");
+		printf("ret:%d",ret);
+	}
+	return ret;
+}
 
 int send_status(int fd)
 {
@@ -404,6 +422,7 @@ int issue_cmd(int fd,int i)
 		break;
 	case 7:
 		/* code */
+		ret = cmd7(fd);
 		break;
 	case 8:
 		/* code */
