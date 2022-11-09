@@ -251,7 +251,7 @@ int cmd7(int fd)
 	struct mmc_ioc_cmd idata;
 	memset(&idata, 0, sizeof(idata));
 	idata.opcode = 7;
-	idata.arg = 0;
+	idata.arg = 1<<16;
 	idata.flags = MMC_RSP_SPI_R1 | MMC_RSP_R1 | MMC_CMD_AC;
 	idata.blksz = 512;
 	idata.blocks = 1;
