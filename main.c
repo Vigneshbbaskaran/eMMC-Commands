@@ -13,7 +13,7 @@
 #include "mmc.h"
 
 //#define TEST
-#define CMD 30
+#define CMD 5
 
 int do_general_cmd_read(int dev_fd)
 {
@@ -191,6 +191,25 @@ int switch_cmd(int fd)
 	return ret;
 }
 
+int sleep(int fd ,int arg)
+{
+	int ret = 0;
+	struct mmc_ioc_cmd idata;
+	memset(&idata, 0, sizeof(idata));
+	idata.write_flag = 1;
+	idata.opcode = MMC_SLEEP_AWAKE;
+	idata.arg = arg;
+	idata.flags = MMC_RSP_SPI_R1B | MMC_RSP_R1B | MMC_CMD_AC;
+	/* Kernel will set cmd_timeout_ms if 0 is set */
+	idata.cmd_timeout_ms = 0;
+
+	ret = ioctl(fd, MMC_IOC_CMD, &idata);
+	if (ret)
+		perror("ioctl");
+
+	return ret;
+}
+
 int read_extcsd(int fd, __u8 *ext_csd)
 {
 	int ret = 0;
@@ -256,7 +275,6 @@ static int set_write_protect(int fd, __u32 blk_addr, int opcode)
 	if (opcode==28 || opcode==29)
 	{
 		idata.opcode =opcode;
-		idata.opcode = MMC_SET_WRITE_PROT;
 		idata.flags = MMC_RSP_SPI_R1B | MMC_RSP_R1B | MMC_CMD_AC;
 		idata.arg = blk_addr;
 	}
@@ -313,6 +331,14 @@ int issue_cmd(int fd,int i)
 		break;
 	case 5:
 		/* code */
+		ret = sleep(fd,1<<15);
+		if(ret==0)
+			printf("Device goes to sleep Mode..");
+		else
+			break;
+		ret = sleep(fd,0);
+		if(ret==0)
+			printf("Device Now Awaken..");
 		break;
 	case 6:
 		/* code */
@@ -356,6 +382,7 @@ int issue_cmd(int fd,int i)
 		break;
 	case 17:
 		/* code */
+		//SUCCESS
 		ret = set_single_cmd(fd, MMC_READ_SINGLE_BLOCK, 0, 1,1);
 		break;
 	case 18:
@@ -404,10 +431,12 @@ int issue_cmd(int fd,int i)
 		break;
 	case 30:
 		/* code */
+		//SUCCESS
 		ret = set_write_protect(fd,1,MMC_SEND_WRITE_PROT);
 		break;
 	case 31:
 		/* code */
+		//SUCCESS
 		ret = set_write_protect(fd,1,MMC_SEND_WRITE_PROT_TYPE);
 		break;
 	case 35:
