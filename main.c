@@ -438,6 +438,7 @@ int issue_cmd(int fd,int i)
 		break;
 	case 11:
 		/* code */
+		ret = set_single_cmd(fd, MMC_READ_DAT_UNTIL_STOP, 0, 1,1);
 		break;
 	case 12:
 		/* code */
