@@ -13,7 +13,7 @@
 #include "mmc.h"
 
 //#define TEST
-#define CMD 55
+#define CMD 16
 
 int do_general_cmd_read(int dev_fd)
 {
