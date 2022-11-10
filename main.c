@@ -588,6 +588,7 @@ int issue_cmd(int fd,int i)
 	case 35:
 		/* code */
 		//SUCCESS
+		printf("cmd35\n");
 		ret = erase(fd,35,0);
 		break;
 	case 36:
