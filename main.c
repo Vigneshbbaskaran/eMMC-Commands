@@ -519,6 +519,7 @@ int issue_cmd(int fd,int i)
 	case 17:
 		/* code */
 		//SUCCESS
+		printf("Read command\n");
 		ret = set_single_cmd(fd, MMC_READ_SINGLE_BLOCK, 0, 1,1);
 		break;
 	case 18:
