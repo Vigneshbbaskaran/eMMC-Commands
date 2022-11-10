@@ -13,7 +13,7 @@
 #include "mmc.h"
 
 //#define TEST
-#define CMD 17
+#define CMD 24
 
 int do_general_cmd_read(int dev_fd)
 {
@@ -71,7 +71,7 @@ static  int set_single_cmd(int fd, __u32 opcode, int write_flag, unsigned int bl
 
 static  int set_single_cmd_wrt(int fd, __u32 opcode, int write_flag, unsigned int blocks,unsigned int flags)
 {   
-	char frame[512]="qwerty..............................CMD-testing...........................................................";
+	char frame[512]="Vignesh Baskran..........checking.......Write.............CMD-testing...........Read................................................";
 	struct mmc_ioc_cmd ioc;
 	memset(&ioc, 0, sizeof(ioc));
 	int ret=0;
@@ -344,7 +344,7 @@ static int cmd19(int fd)
 	struct mmc_ioc_cmd idata;
     __u32 arg=0;
     int ret;
-	char frame[512]="qwerty..............................CMD-testing...........................................................";
+	char frame[512]="Vignesh Baskran..........checking.......Write.............CMD-testing...........Read................................................";
 	mmc_ioc_cmd_set_data((idata), &frame);
 	memset(&idata, 0, sizeof(idata));
 	idata.write_flag = 1;
