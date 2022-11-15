@@ -342,6 +342,11 @@ int cmd7(int fd)
 		perror("ioctl");
 		printf("ret:%d",ret);
 	}
+	for(int i=0;i<4;i++)
+	{
+			printf("read response{%d}:0x%08x\n",i,ioc.response[0]);                                                                                         
+       		printf("\n");
+	} 
 	return ret;
 }
 
