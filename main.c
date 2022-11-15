@@ -69,6 +69,28 @@ static  int set_single_cmd(int fd, __u32 opcode, int write_flag, unsigned int bl
 	return ret;
 }
 
+
+static  int cmd1(int fd, __u32 opcode, int write_flag, unsigned int blocks,unsigned int flags)
+{   
+	char frame[512];
+	struct mmc_ioc_cmd ioc;
+	memset(&ioc, 0, sizeof(ioc));
+	int ret=0;
+	mmc_ioc_cmd_set_data((ioc), &frame);
+	ioc.opcode = opcode;
+	ioc.arg = 0x0;
+	ioc.flags = flags;
+	ret = ioctl(fd, MMC_IOC_CMD, &ioc);
+	if(ret==0)
+		printf("SUCCESS\n");
+	for( int i=0;i<4;i++)                                                                                                                               
+    {                                                                                                                                             
+     	printf("read response{%d}:0x%08x\n",i,ioc.response[i]);                                                                                         
+       	printf("\n");                                                                                       
+    }
+	return ret;
+}
+
 static  int set_single_cmd_wrt(int fd, __u32 opcode, int write_flag, unsigned int blocks,unsigned int flags)
 {   
 	char frame[512]="Vignesh Baskran..........checking.......Write.............CMD-testing...........Read................................................";
@@ -440,7 +462,7 @@ int issue_cmd(int fd,int i)
 		break;
 	case 1:
 		/* code */
-		ret = set_single_cmd(fd, MMC_SEND_OP_COND, 0, 1, MMC_RSP_R3|MMC_RSP_SPI_R3|MMC_CMD_BCR);
+		ret = cmd1(fd, MMC_SEND_OP_COND, 0, 1, MMC_RSP_R3|MMC_RSP_SPI_R3|MMC_CMD_BCR);
 		break;
 	case 2:
 		/* code */
@@ -667,7 +689,10 @@ int main(int nargs, char **argv)
 		}
 	}
 #else
-	i=CMD;
+	i=0;
+	ret = issue_cmd(fd,i);
+		testcase(ret,i);
+	i=1;
 	ret = issue_cmd(fd,i);
 		testcase(ret,i);
 #endif
