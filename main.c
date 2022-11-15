@@ -87,7 +87,7 @@ static  int cmd1(int fd, __u32 opcode, int write_flag, unsigned int blocks,unsig
 			printf("IOCL SUCCESS\n");	                                                                                                                                                                                                                                                                      
      	printf("read response{0}:0x%08x\n",ioc.response[0]);                                                                                         
        	printf("\n");
-		if(ioc.response[0] & 0x1<31)
+		if(ioc.response[0] & 0x1<<31)
 		{
 			printf("Card Power up: SUCCESS\n");
 			break;
