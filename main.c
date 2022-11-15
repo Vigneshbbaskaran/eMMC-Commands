@@ -12,7 +12,7 @@
 #include <linux/fs.h>
 #include "mmc.h"
 
-#define TEST
+//#define TEST
 #define CMD 24
 
 int do_general_cmd_read(int dev_fd)
@@ -334,10 +334,8 @@ int cmd7(int fd)
 	struct mmc_ioc_cmd idata;
 	memset(&idata, 0, sizeof(idata));
 	idata.opcode = 7;
-	idata.arg = 1<<16;
+	idata.arg = 0;
 	idata.flags = MMC_RSP_SPI_R1 | MMC_RSP_R1 | MMC_CMD_AC;
-	idata.blksz = 512;
-	idata.blocks = 1;
 	ret = ioctl(fd, MMC_IOC_CMD, &idata);
 	if (ret)
 	{
@@ -714,16 +712,10 @@ int main(int nargs, char **argv)
 				testcase(ret,i);
 	}
 #else
-	i=0;
+	i=7;
 	ret = issue_cmd(fd,i);
 		testcase(ret,i);
-	i=1;
-	ret = issue_cmd(fd,i);
-		testcase(ret,i);
-	i=2;
-	ret = issue_cmd(fd,i);
-		testcase(ret,i);
-	i=3;
+	i=9;
 	ret = issue_cmd(fd,i);
 		testcase(ret,i);
 #endif
