@@ -104,7 +104,7 @@ static  int cmd2(int fd, __u32 opcode, int write_flag, unsigned int blocks,unsig
 		int ret=0;
 		mmc_ioc_cmd_set_data((ioc), &frame);
 		ioc.opcode = opcode;
-		ioc.arg = 0x40300000;
+		ioc.arg = 0x000;
 		ioc.flags = flags;
 		ret = ioctl(fd, MMC_IOC_CMD, &ioc);
 		if(ret==0)
