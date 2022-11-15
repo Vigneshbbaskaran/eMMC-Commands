@@ -215,13 +215,18 @@ int cmd3(int fd)
 	struct mmc_ioc_cmd idata;
 	memset(&idata, 0, sizeof(idata));
 	idata.opcode = MMC_SET_RELATIVE_ADDR;
-	idata.arg = 1<<16;
+	idata.arg = 0;
 	idata.flags = MMC_RSP_SPI_R1 | MMC_RSP_R1 | MMC_CMD_AC;
 	/* Kernel will set cmd_timeout_ms if 0 is set */
 
 	ret = ioctl(fd, MMC_IOC_CMD, &idata);
 	if (ret)
 		perror("ioctl");
+	for(int i=0;i<4;i++)
+		{
+			printf("read response{%d}:0x%08x\n",i,idata.response[0]);                                                                                         
+       		printf("\n");
+		}                                                         
 	return ret;
 }
 int cmd23(int fd)
