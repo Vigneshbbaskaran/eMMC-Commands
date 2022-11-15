@@ -715,9 +715,7 @@ int main(int nargs, char **argv)
 	i=7;
 	ret = issue_cmd(fd,i);
 		testcase(ret,i);
-	i=9;
-	ret = issue_cmd(fd,i);
-		testcase(ret,i);
+	
 #endif
     close(fd);
 }
