@@ -689,12 +689,15 @@ int main(int nargs, char **argv)
 		}
 	}
 #else
-	//i=0;
-	//ret = issue_cmd(fd,i);
-	//	testcase(ret,i);
+	i=0;
+	ret = issue_cmd(fd,i);
+		testcase(ret,i);
+	while(1)
+	{
 	i=1;
 	ret = issue_cmd(fd,i);
 		testcase(ret,i);
+	}
 #endif
     close(fd);
 }
