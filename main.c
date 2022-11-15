@@ -12,7 +12,7 @@
 #include <linux/fs.h>
 #include "mmc.h"
 
-//#define TEST
+#define TEST
 #define CMD 24
 
 int do_general_cmd_read(int dev_fd)
@@ -707,17 +707,11 @@ int main(int nargs, char **argv)
 	}
 
 #ifdef TEST
-    for(i=28;i<=29;i++)	//Testing all Commands
+    for(i=0;i<=3;i++)	//Testing all Commands
     {
 	// CMD 
-		if(i==0)
-		{
-			continue;
-		}
-		else{
     		ret = issue_cmd(fd,i);
 				testcase(ret,i);
-		}
 	}
 #else
 	i=0;
@@ -727,6 +721,9 @@ int main(int nargs, char **argv)
 	ret = issue_cmd(fd,i);
 		testcase(ret,i);
 	i=2;
+	ret = issue_cmd(fd,i);
+		testcase(ret,i);
+	i=3;
 	ret = issue_cmd(fd,i);
 		testcase(ret,i);
 #endif
