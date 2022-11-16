@@ -12,7 +12,7 @@
 #include <linux/fs.h>
 #include "mmc.h"
 
-//#define TEST
+#define TEST
 #define CMD 24
 
 int do_general_cmd_read(int dev_fd)
