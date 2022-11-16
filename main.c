@@ -12,8 +12,8 @@
 #include <linux/fs.h>
 #include "mmc.h"
 
-#define TEST
-#define CMD 24
+//#define TEST
+#define CMD 0
 
 int do_general_cmd_read(int dev_fd)
 {
@@ -717,10 +717,12 @@ int main(int nargs, char **argv)
 				testcase(ret,i);
 	}
 #else
+	i=0;
+	ret = issue_cmd(fd,i);
+		testcase(ret,i);
 	i=7;
 	ret = issue_cmd(fd,i);
 		testcase(ret,i);
-	
 #endif
     close(fd);
 }
