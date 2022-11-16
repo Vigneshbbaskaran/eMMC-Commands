@@ -717,10 +717,10 @@ int main(int nargs, char **argv)
 				testcase(ret,i);
 	}
 #else
-	i=0;
+	i=7;
 	ret = issue_cmd(fd,i);
 		testcase(ret,i);
-	i=7;
+	i=0;
 	ret = issue_cmd(fd,i);
 		testcase(ret,i);
 #endif
