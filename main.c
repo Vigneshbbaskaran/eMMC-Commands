@@ -326,8 +326,36 @@ int read_extcsd(int fd, __u8 *ext_csd)
 		perror("ioctl");
 		printf("ret:%d",ret);
 	}
+		for(int i=0;i<4;i++)
+		{
+			printf("read response{%d}:0x%08x\n",i,idata.response[0]);                                                                                         
+       		printf("\n");
+		}   
 	return ret;
 }
+
+int cmd6(int fd)
+{
+	int ret = 0;
+	struct mmc_ioc_cmd idata;
+	memset(&idata, 0, sizeof(idata));
+	idata.opcode = 6;
+	idata.arg = 0x03B90100;
+	idata.flags = MMC_RSP_SPI_R1B | MMC_RSP_R1B | MMC_CMD_AC;
+	ret = ioctl(fd, MMC_IOC_CMD, &idata);
+	if (ret)
+	{
+		perror("ioctl");
+		printf("ret:%d",ret);
+	}
+	for(int i=0;i<4;i++)
+	{
+			printf("read response{%d}:0x%08x\n",i,idata.response[0]);                                                                                         
+       		printf("\n");
+	} 
+	return ret;
+}
+
 int cmd7(int fd)
 {
 	int ret = 0;
@@ -354,7 +382,7 @@ int send_status(int fd)
 {
 	int ret = 0;
 	struct mmc_ioc_cmd idata;
-	__u32  *response;
+	
 	memset(&idata, 0, sizeof(idata));
 	idata.opcode = MMC_SEND_STATUS;
 	idata.arg = (1 << 16);
@@ -364,7 +392,11 @@ int send_status(int fd)
 	if (ret)
 	perror("ioctl");
 
-	*response = idata.response[0];
+		for(int i=0;i<4;i++)
+		{
+			printf("read response{%d}:0x%08x\n",i,idata.response[0]);                                                                                         
+       		printf("\n");
+		}   
 
 	return ret;
 }
@@ -522,6 +554,7 @@ int issue_cmd(int fd,int i)
 		break;
 	case 6:
 		/* code */
+		ret = cmd6(fd);
 		break;
 	case 7:
 		/* code */
@@ -717,10 +750,16 @@ int main(int nargs, char **argv)
 				testcase(ret,i);
 	}
 #else
-	i=7;
+	i=8;
 	ret = issue_cmd(fd,i);
 		testcase(ret,i);
-	i=0;
+	i=6;
+	ret = issue_cmd(fd,i);
+		testcase(ret,i);
+	i=13;
+	ret = issue_cmd(fd,i);
+		testcase(ret,i);
+	i=8;
 	ret = issue_cmd(fd,i);
 		testcase(ret,i);
 #endif
