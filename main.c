@@ -13,7 +13,7 @@
 #include "mmc.h"
 
 //#define TEST
-#define CMD 0
+#define CMD 7
 
 int do_general_cmd_read(int dev_fd)
 {
@@ -335,7 +335,7 @@ int cmd7(int fd)
 	memset(&idata, 0, sizeof(idata));
 	idata.opcode = 7;
 	idata.arg = 0;
-	idata.flags = MMC_RSP_SPI_R1 | MMC_RSP_R1 | MMC_CMD_AC;
+	idata.flags = MMC_RSP_SPI_R1B | MMC_RSP_R1B | MMC_CMD_AC;
 	ret = ioctl(fd, MMC_IOC_CMD, &idata);
 	if (ret)
 	{
@@ -376,7 +376,7 @@ static int issue_cmd0(int fd)
     int ret;
 	memset(&idata, 0, sizeof(idata));
 	idata.opcode = MMC_GO_IDLE_STATE;
-	idata.arg = arg;
+	idata.arg = 0;
 	idata.flags = MMC_RSP_NONE | MMC_CMD_BC;
 	ret = ioctl(fd, MMC_IOC_CMD, &idata);
 	return ret;
