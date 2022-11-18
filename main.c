@@ -13,7 +13,7 @@
 #include "mmc.h"
 
 //#define TEST
-#define CMD 7
+#define CMD 19
 
 int do_general_cmd_read(int dev_fd)
 {
@@ -751,7 +751,7 @@ int main(int nargs, char **argv)
 				testcase(ret,i);
 	}
 #else
-	i=0;
+	i=CMD;
 	ret = issue_cmd(fd,i);
 		testcase(ret,i);
 
