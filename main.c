@@ -404,7 +404,7 @@ int send_status(int fd)
 static int issue_cmd0(int fd)
 {
 	struct mmc_ioc_cmd idata;
-    __u32 arg=0;
+    __u32 arg=0xf0f0f0f0;
     int ret;
 	memset(&idata, 0, sizeof(idata));
 	idata.opcode = MMC_GO_IDLE_STATE;
@@ -413,6 +413,7 @@ static int issue_cmd0(int fd)
 	ret = ioctl(fd, MMC_IOC_CMD, &idata);
 	return ret;
 }
+
 static int cmd55(int fd)
 {
 	struct mmc_ioc_cmd idata;
