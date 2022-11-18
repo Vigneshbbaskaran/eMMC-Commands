@@ -750,18 +750,10 @@ int main(int nargs, char **argv)
 				testcase(ret,i);
 	}
 #else
-	i=8;
+	i=0;
 	ret = issue_cmd(fd,i);
 		testcase(ret,i);
-	i=6;
-	ret = issue_cmd(fd,i);
-		testcase(ret,i);
-	i=13;
-	ret = issue_cmd(fd,i);
-		testcase(ret,i);
-	i=8;
-	ret = issue_cmd(fd,i);
-		testcase(ret,i);
+
 #endif
     close(fd);
 }
